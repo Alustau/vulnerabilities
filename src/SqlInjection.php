@@ -19,18 +19,6 @@ class SqlInjection extends Vulnerability
         $this->targets = $targets;
     }
 
-    private function defaultEnterData()
-    {
-        $dataDefault['dork'] = false;
-        $dataDefault['pl'] = false;
-        $dataDefault['tor'] = false;
-        $dataDefault['torl'] = false;
-        $dataDefault['virginProxies'] = false;
-        $dataDefault['proxyOfSites'] = false;
-
-        return $dataDefault;
-    }
-
     protected function checkSuccess()
     {
         $isValidSqli = $this->isSqlInjection();
