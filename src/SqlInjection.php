@@ -6,15 +6,8 @@ use Respect\Validation\Validator as v;
 use Aszone\FakeHeaders\FakeHeaders;
 use GuzzleHttp\Client;
 
-class SqlInjection
+class SqlInjection extends Vulnerability
 {
-    public $targets;
-    public $target;
-
-    public $tor;
-
-    public $commandData;
-
     public function __construct($commandData, $targets)
     {
         //Check command of entered.
@@ -38,23 +31,6 @@ class SqlInjection
         return $dataDefault;
     }
 
-    public function check()
-    {
-        $result = array();
-        if ($this->targets) {
-            foreach ($this->targets as $keySearchEngenier => $searchEngenier) {
-                foreach ($searchEngenier as $keyTarget => $target) {
-                    $this->target = urldecode(urldecode($target));
-                    $resultValid = $this->checkSuccess();
-                    if ($resultValid) {
-                        $result[]=$resultValid;
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
     protected function checkSuccess()
     {
         $isValidSqli = $this->isSqlInjection();
@@ -151,6 +127,7 @@ class SqlInjection
     {
         //echo $body;
         $errors = $this->getErrorsOfList();
+
         foreach ($errors as $error) {
             $isValid = strpos($body, $error);
             if ($isValid !== false) {
@@ -159,16 +136,5 @@ class SqlInjection
         }
 
         return false;
-    }
-
-    protected function getErrorsOfList()
-    {
-        $errorsMysql = parse_ini_file(__DIR__ . '/resource/Errors/mysql.ini');
-        $errorsMariaDb = parse_ini_file(__DIR__ . '/resource/Errors/mariadb.ini');
-        $errorsOracle = parse_ini_file(__DIR__ . '/resource/Errors/oracle.ini');
-        $errorssqlServer = parse_ini_file(__DIR__ . '/resource/Errors/sqlserver.ini');
-        $errorsPostgreSql = parse_ini_file(__DIR__ . '/resource/Errors/postgresql.ini');
-
-        return array_merge($errorsMysql, $errorsMariaDb, $errorsOracle, $errorssqlServer, $errorsPostgreSql);
     }
 }
